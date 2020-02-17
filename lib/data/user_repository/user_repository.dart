@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_repository_example/data/irepository.dart';
 import 'package:flutter_repository_example/domain/models/user.dart';
+import 'package:flutter_repository_example/exceptions/no_connection_exception.dart';
 
 class UserRepository implements IRepository<User> {
   final IRepository<User> source;
@@ -21,7 +22,7 @@ class UserRepository implements IRepository<User> {
     }
 
     if (this.hasConnection()) {
-      final remoteUser = await this.source.get(id);
+      var remoteUser = await this.source.get(id);
       this.cache.add(remoteUser);
     }
 
@@ -30,6 +31,10 @@ class UserRepository implements IRepository<User> {
 
   @override
   Future<void> add(User object) async {
+    if (this.hasConnection()) {
+      throw NoConnectionException();
+    }
+
     await this.source.add(object);
     await this.cache.add(object);
   }
