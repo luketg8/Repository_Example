@@ -31,7 +31,7 @@ class UserRepository implements IRepository<User> {
 
   @override
   Future<void> add(User object) async {
-    if (this.hasConnection()) {
+    if (!this.hasConnection()) {
       throw NoConnectionException();
     }
 
