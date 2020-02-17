@@ -25,10 +25,10 @@ class UserRepository implements IRepository<User> {
       throw NoConnectionException();
     }
 
-    var remoteUser = await this.source.get(id);
+    final remoteUser = await this.source.get(id);
     this.cache.add(remoteUser);
 
-    return this.cache.get(id);
+    return remoteUser;
   }
 
   @override
