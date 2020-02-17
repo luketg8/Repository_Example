@@ -49,6 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }
 
+                  if (state.hasNetworkError) {
+                    return Text('Network error');
+                  }
+
                   if (state.users?.isEmpty ?? true) {
                     return Text('No users');
                   }

@@ -3,6 +3,7 @@ import 'package:flutter_repository_example/blocs/states/home_state.dart';
 import 'package:flutter_repository_example/data/irepository.dart';
 import 'package:flutter_repository_example/domain/models/user.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter_repository_example/exceptions/no_connection_exception.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final IRepository<User> _userRepository;
@@ -20,7 +21,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (event is HomeEventFetchNextUser) {
       yield HomeState(isFetching: true);
 
-      final newUser = await this._userRepository.get(this._currentUserIndex);
+      var newUser;
+
+      try {
+        newUser = await this._userRepository.get(this._currentUserIndex);
+      } on NoConnectionException {
+        yield HomeState(hasNetworkError: true);
+        return;
+      }
 
       this._currentUserIndex++;
       this._users.add(newUser);

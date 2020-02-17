@@ -21,10 +21,12 @@ class UserRepository implements IRepository<User> {
       return cachedUser;
     }
 
-    if (this.hasConnection()) {
-      var remoteUser = await this.source.get(id);
-      this.cache.add(remoteUser);
+    if (!this.hasConnection()) {
+      throw NoConnectionException();
     }
+
+    var remoteUser = await this.source.get(id);
+    this.cache.add(remoteUser);
 
     return this.cache.get(id);
   }
