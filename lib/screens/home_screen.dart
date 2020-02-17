@@ -16,8 +16,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void didChangeDependencies() {
-    final userRepository = RepositoryProvider.of<IRepository<User>>(context);
-    this._bloc = HomeBloc(userRepository);
+    if (this._bloc == null) {
+      final userRepository = RepositoryProvider.of<IRepository<User>>(context);
+      this._bloc = HomeBloc(userRepository);
+    }
     super.didChangeDependencies();
   }
 
